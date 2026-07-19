@@ -209,7 +209,7 @@ get n
 if (n > 0) {
     out "positive"
 }
-elif (n == 0) {
+elif (n = 0) {
     out "zero"
 }
 else {
