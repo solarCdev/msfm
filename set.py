@@ -296,8 +296,15 @@ class IntensionalSet:
         finally:
             interpreter.current_env = old_env
 
-    def __contains__(self, value):
-        raise RuntimeError("조건제시법 집합은 인터프리터 컨텍스트를 통해서만 판별할 수 있습니다.")
+
+    def __contains__(self, value: 'RealNumber') -> bool:
+        from interpreter import Interpreter
+        interp = Interpreter._current_instance
+        
+        if interp is None:
+            raise RuntimeError("조건제시법 집합은 인터프리터가 구동 중인 상태에서만 'in' 연산을 수행할 수 있습니다.")
+            
+        return self.contains(interp, value)
 
     def __str__(self):
         return f"{{ {self.var_name} | ... }}"

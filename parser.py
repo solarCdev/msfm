@@ -150,7 +150,7 @@ class AssumeNode(ASTNode):
 class SetNode(ASTNode):
     def __init__(self, set_type, data):
         self.set_type = set_type  # 'ELEMENTS', 'COMPREHENSION', 'INTERVAL'
-        self.data = data          
+        self.data = data
         # ELEMENTS -> [Node, Node, ...]
         # COMPREHENSION -> {'var_name': 'x', 'condition': Node}
         # INTERVAL -> {'left_bracket': '(', 'left': Node, 'right': Node, 'right_bracket': ']'}
@@ -193,6 +193,21 @@ class SequenceLiteralNode(ASTNode):
 
     def __repr__(self):
         return f"seq [{', '.join(repr(e) for e in self.elements)}]"
+
+class PlotNode(ASTNode):
+    def __init__(self, command, **kwargs):
+        self.command = command
+        if kwargs.get('func'):
+            self.func = kwargs['func']
+        if kwargs.get('domain'):
+            self.domain = kwargs['domain']
+            if kwargs['style']:
+                self.style = kwargs['style']
+        if kwargs.get('filename'):
+            self.filename = kwargs['filename']
+    def __repr__(self):
+        return f"plot {self.command}"
+
 
 class Parser:
     def __init__(self, tokens):
@@ -244,6 +259,7 @@ class Parser:
             elif token.value == 'break': return self.parse_break_statement()
             elif token.value == 'while': return self.parse_while_statement()
             elif token.value == 'continue': return self.parse_continue_statement()
+            elif token.value == 'plot': return self.parse_plot_statement()
             elif token.value == 'PI' or token.value == 'E': return self.parse_assignment_or_expression()
         elif token.type == TokenType.ID: return self.parse_assignment_or_expression()
         else:
@@ -433,7 +449,7 @@ class Parser:
             argument_node = self.parse_expression()
             self.eat(TokenType.RPAREN)             
             
-            return LogNode(base_node, argument_node) # 로그 전용 AST 노드 반환
+            return LogNode(base_node, argument_node)
         
         elif token.type == TokenType.ID:
             var_token = self.current_token
@@ -612,4 +628,25 @@ class Parser:
         contradict_body = self.parse_block()
         
         return AssumeNode(condition, body, contradict_body)
-
+    
+    def parse_plot_statement(self):
+        self.eat(TokenType.KEYWORD)
+        
+        command = self.eat(TokenType.STRING).value
+        if command == 'show':
+            return PlotNode('show')
+        elif command == 'clear':
+            return PlotNode('show')
+        elif command == 'save':
+            filename = self.eat(TokenType.STRING).value
+            return PlotNode('show', filename=filename)
+        elif command == 'add':
+            func = self.eat(TokenType.ID).value
+            domain = self.parse_expression()
+            style = self.eat(TokenType.STRING).value
+            return PlotNode('add', func=func, domain=domain, style=style)
+        elif command == 'remove':
+            func = self.eat(TokenType.ID).value
+            return PlotNode('remove', func=func)
+        else:
+            raise SyntaxError("옳지 않은 plot 명령어")

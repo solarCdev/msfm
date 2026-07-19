@@ -83,6 +83,7 @@ class Tokenizer:
                          'seq',
                          'PI',
                          'E',
+                         'plot'
                         }
 
     def peek(self, offset=1):
