@@ -15,6 +15,7 @@ def run_file(file_path):
         return
 
     try:
+        code += '\n'
         tokenizer = Tokenizer(code)
         tokens = tokenizer.tokenize()
         

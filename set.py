@@ -137,6 +137,15 @@ class RangeSet:
     
     def __sub__(self, other: 'RangeSet') -> 'RangeSet':
         return subtract(self, other)
+    
+    def len(self) -> float:
+        length = 0
+        for interval in self.intervals:
+            if interval.start == interval.end and interval.start_closed and interval.end_closed:
+                length += 1
+            else:
+                return float('inf')
+        return length
 
 def intersection(*sets: RangeSet) -> RangeSet:
     opened = 0

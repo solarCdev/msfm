@@ -92,6 +92,7 @@ class Interpreter:
             return self.current_env.define(var_name, val)
 
     def visit_BinOpNode(self, node):
+        from set import RangeSet, IntensionalSet
         left_val = self.visit(node.left)
         right_val = self.visit(node.right)
         op_type = node.op_token.type
@@ -110,10 +111,16 @@ class Interpreter:
         elif op_type == TokenType.GT:     return left_val > right_val
         elif op_type == TokenType.GTE:    return left_val >= right_val
         
-        elif op_type == TokenType.AND:    return left_val and right_val
-        elif op_type == TokenType.OR:     return left_val or right_val
+        elif op_type == TokenType.AND:
+            if isinstance(left_val, RangeSet) and isinstance(right_val, RangeSet):
+                return left_val & right_val
+            return left_val and right_val
+        elif op_type == TokenType.OR or op_type == TokenType.PIPE:
+            if isinstance(left_val, RangeSet) and isinstance(right_val, RangeSet):
+                return left_val | right_val
+            return left_val or right_val
         elif op_type == TokenType.IN:
-            from set import RangeSet, IntensionalSet
+            
             if not isinstance(right_val, (RangeSet, IntensionalSet)):
                 raise TypeError(f"타입 에러: 'in' 연산의 우항은 반드시 집합이어야 합니다. (받은 타입: {type(right_val).__name__})")
             return left_val in right_val
@@ -129,7 +136,11 @@ class Interpreter:
 
         if op_type == TokenType.MINUS:   return -expr_val
         elif op_type == TokenType.PLUS:  return expr_val
-        elif op_type == TokenType.NOT:   return not expr_val
+        elif op_type == TokenType.NOT:
+            from set import RangeSet
+            if isinstance(expr_val, RangeSet):
+                return ~expr_val
+            return not expr_val
         
         if op_type == TokenType.SQRT:    return IrrationalNumber(expr_val)
         elif op_type == TokenType.SIN:   return TrigonometricNumber("SIN", 1.0, expr_val)
@@ -495,7 +506,7 @@ class Interpreter:
                     self.plot_ax.plot(x_vals, y_vals, style_str, label=target_name, linewidth=2)
                 else:
                     self.plot_ax.plot(x_vals, y_vals, label=target_name, linewidth=2)
-# 갈래 2-2: 수열형 플롯 (오직 점만 찍기!)
+    # 갈래 2-2: 수열형 플롯 (오직 점만 찍기!)
             elif isinstance(target, Sequence):
                 istart = int(np.ceil(start))
                 iend = int(np.floor(end))
@@ -520,3 +531,14 @@ class Interpreter:
             return None
 
         raise ValueError(f"대수 오류: 올바르지 않은 plot 명령어입니다. ('{cmd}')")
+    
+    def visit_LenNode(self, node):
+        from function import Sequence
+        from set import RangeSet
+        
+        res = self.visit(node.value)
+        if isinstance(res, Sequence):
+            return RealNumber(len(res.elements))
+        if isinstance(res, RangeSet):
+            return RealNumber(res.len())
+        raise ValueError(f"대수 오류: len 안에는 집합과 수열만 들어갈 수 있습니다. ('{node.value}')")

@@ -208,6 +208,12 @@ class PlotNode(ASTNode):
     def __repr__(self):
         return f"plot {self.command}"
 
+class LenNode(ASTNode):
+    def __init__(self, value):
+        self.value = value
+    
+    def __repr__(self):
+        return f"n({self.value})"
 
 class Parser:
     def __init__(self, tokens):
@@ -262,6 +268,7 @@ class Parser:
             elif token.value == 'plot': return self.parse_plot_statement()
             elif token.value == 'PI' or token.value == 'E': return self.parse_assignment_or_expression()
         elif token.type == TokenType.ID: return self.parse_assignment_or_expression()
+        elif token.type == TokenType.LEN: return self.parse_assignment_or_expression()
         else:
             raise SyntaxError(f'Unexpected Token: {token}')
     
@@ -307,7 +314,7 @@ class Parser:
     def parse_expression(self):
         node = self.parse_comparison()
 
-        while self.current_token and self.current_token.type in (TokenType.AND, TokenType.OR):
+        while self.current_token and self.current_token.type in (TokenType.AND, TokenType.OR, TokenType.PIPE):
             token = self.current_token
             self.advance()
             node = BinOpNode(left=node, op_token=token, right=self.parse_comparison())
@@ -443,6 +450,7 @@ class Parser:
                 return self.parse_interval_expression()
         
         elif token.type == TokenType.LOG:
+            self.eat(TokenType.LOG)
             self.eat(TokenType.LPAREN)
             base_node = self.parse_expression()    
             self.eat(TokenType.COMMA)              
@@ -450,6 +458,14 @@ class Parser:
             self.eat(TokenType.RPAREN)             
             
             return LogNode(base_node, argument_node)
+        
+        elif token.type == TokenType.LEN:
+            self.eat(TokenType.LEN)
+            self.eat(TokenType.LPAREN)
+            value_node = self.parse_expression()
+            self.eat(TokenType.RPAREN)
+            
+            return LenNode(value_node)
         
         elif token.type == TokenType.ID:
             var_token = self.current_token

@@ -15,6 +15,7 @@ class TokenType(Enum):
     POW = auto()       # ^
     ASSIGN = auto()    # =
     MOD = auto()       # %
+    LEN = auto()
     
     # 초월함수
     LOG = auto()
@@ -182,6 +183,9 @@ class Tokenizer:
             elif char == '|':
                 self.tokens.append(Token(TokenType.PIPE, '|'))
                 self.pos += 1
+            elif char == '&':
+                self.tokens.append(Token(TokenType.AND, '&'))
+                self.pos += 1
             elif char == '\n' or char == ';':
                 if self.tokens:
                     if self.tokens[len(self.tokens) - 1].type != TokenType.NEWLINE:
@@ -239,6 +243,8 @@ class Tokenizer:
             return Token(TokenType.TAN, 'tan')
         elif value == 'log':
             return Token(TokenType.LOG, 'log')
+        elif value == 'len':
+            return Token(TokenType.LEN, 'len')
             
         return Token(TokenType.ID, value)
 
