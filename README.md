@@ -1,252 +1,336 @@
-# MSfM
+# MSFM
+## Mathematical Scientific Formula Language
 
-> **Minimal Script for Mathematics**
+> A mathematical programming language designed for expressing mathematical ideas naturally.
 
-MSfM은 **수학적 표현을 그대로 코드로 작성할 수 있도록 설계된 기호 연산 중심의 프로그래밍 언어**입니다.
-부동소수점 오차를 최소화하기 위해 수식을 가능한 한 **기호(Symbolic Form)** 로 유지하며, 함수·수열·집합·명제 등을 수학 교과서의 표기법과 유사하게 표현할 수 있습니다.
+MSFM은 수학적 표현과 탐구를 위해 설계된 프로그래밍 언어입니다.
 
----
-
-# Features
-
-* ✨ **기호 연산(Symbolic Computation)**
-
-  * 실수를 기호 형태로 유지하여 계산
-  * 자동 약분 및 간소화
-  * 필요할 때만 근삿값 계산
-
-* 📖 **수학 친화적 문법**
-
-  * 함수
-  * 수열
-  * 집합
-  * 정의역 제한
-  * 명제 표현
-
-* 📈 **내장 그래프 시각화**
-
-  * 함수 그래프 출력
-  * 다중 그래프 관리
-  * 이미지 저장 지원
-
-* 🧮 **고등학교 수학 특화**
-
-  * 제곱근
-  * 삼각함수
-  * 지수/로그
-  * 집합과 명제
-  * 함수와 수열
+일반적인 프로그래밍 언어처럼 소프트웨어 개발을 주된 목표로 하지 않고,
+함수, 수열, 집합, 그래프와 같은 수학적 객체를 코드로 표현하는 것을 목표로 합니다.
 
 ---
 
-# Hello, MathLang
+## Features
 
-```text
-f(x) := x^2 + 2
+- Mathematical function definition
+- Sequence handling
+- Set operations
+- Mathematical expressions
+- Function visualization
+- Built-in mathematical functions
+- Simple procedural programming
 
-for (x := -2, 2) {
-    out f(x)
-}
+---
+
+# Philosophy
+
+기존 프로그래밍 언어에서는 수학 개념을 표현하기 위해
+복잡한 자료구조와 라이브러리가 필요합니다.
+
+MSFM은 수학적 표현을 직접 코드로 나타내는 것을 목표로 합니다.
+
+Example:
+
+Mathematics:
+
+```
+f(x) = x^2 + 2x + 1
+```
+
+MSFM:
+
+```msfm
+f(x) := x^2 + 2*x + 1
 ```
 
 ---
 
-# Symbolic Number System
+# Syntax
 
-MSfM은 실수를 가능한 한 **기호적으로 유지**합니다.
+## Output
 
-```text
-sqrt(12)
+```msfm
+out "Hello MSFM"
 ```
-
-↓
-
-```text
-2sqrt(3)
-```
-
-또한,
-
-```text
-sin(PI / 6)
-```
-
-↓
-
-```text
-1 / 2
-```
-
-처럼 특수각은 자동으로 계산됩니다.
-
-실수 근삿값은 그래프 출력이나 대소 비교 등 필요한 경우에만 생성됩니다.
 
 ---
 
-# Function Definition
+## Variables
 
-수학 교과서와 유사한 형태로 함수를 정의할 수 있습니다.
+변수 대입은 `:=` 연산자를 사용합니다.
 
-```text
+```msfm
+a := 10
+b := 3.14
+```
+
+`=`는 수학적 등호 및 조건 비교에 사용됩니다.
+
+---
+
+# Functions
+
+## Function Definition
+
+```msfm
 f(x) := x^2 + 1
 ```
 
-정의역 제한도 지원합니다.
+정의역을 제한할 수 있습니다.
 
-```text
-f(x) 단 (x in [-5, 5]) := x^2 + 2
+```msfm
+f(x in {1,2,3}) := x^2
 ```
 
----
-
-# Sequence
-
-수열은 정의역이 자연수인 특수한 함수로 취급됩니다.
-
-```text
-A[n] := 2 * n - 1
-
-out A[10]
-```
+정의역을 지정하지 않으면 기본적으로 실수 전체를 사용합니다.
 
 ---
 
 # Sets
 
-MSfM은 다양한 집합 표기법을 지원합니다.
+집합은 `{}`를 사용합니다.
 
-원소 나열
-
-```text
-{1, 2, 3}
+```msfm
+A := {1,2,3}
 ```
 
-구간
+## Set Operations
 
-```text
-[-1, 3)
-```
+| Operator | Meaning |
+|---|---|
+| `|` | Union |
+| `&` | Intersection |
+| `-` | Difference |
+| `not` | Complement |
 
-조건 제시
+Example:
 
-```text
-{x | x > 0}
+```msfm
+A := {1,2,3}
+B := {3,4,5}
+
+C := A | B
 ```
 
 ---
 
-# Assumptions
+# Sequences
 
-특정 조건을 가정한 상태에서 계산을 수행할 수 있습니다.
+MSFM은 수열을 직접 표현할 수 있습니다.
 
-```text
-assume (x > 0) {
+## Sequence Literal
 
-    out sqrt(x^2)
+```msfm
+a := seq[1,4,7,2,60]
+```
 
-} contradict {
+## Function-style Sequence
 
-    out "Contradiction"
+```msfm
+a(n in N) := n^2
+```
+
+---
+
+## Sequence Operations
+
+Add element:
+
+```msfm
+a + 10
+```
+
+Concatenate:
+
+```msfm
+a + b
+```
+
+Remove element:
+
+```msfm
+a - 3
+```
+
+Length:
+
+```msfm
+len(a)
+```
+
+---
+
+# Control Flow
+
+## if
+
+```msfm
+if (x > 0) {
+
+}
+elif (x = 0) {
+
+}
+else {
 
 }
 ```
 
-필요한 결과만 전역 환경에 반영할 수도 있습니다.
+---
 
-```text
-apply x
+## for
+
+```msfm
+for (i=1,10) {
+
+}
+```
+
+---
+
+## while
+
+```msfm
+while (condition) {
+
+}
+```
+
+---
+
+# Built-in Mathematical Functions
+
+| Function | Description |
+|---|---|
+| `sin(x)` | Sine |
+| `cos(x)` | Cosine |
+| `tan(x)` | Tangent |
+| `log(x)` | Natural logarithm |
+| `abs(x)` | Absolute value |
+
+Example:
+
+```msfm
+f(x) := abs(x)
+```
+
+Trigonometric functions use radians.
+
+```msfm
+sin(PI/2)
 ```
 
 ---
 
 # Plotting
 
-그래프 출력은 `plot` 키워드 하나로 수행됩니다.
+MSFM supports mathematical visualization.
 
-함수 출력
+## Add Function Plot
 
-```text
-plot f [-PI, PI] "r--"
+```msfm
+plot "add" f (-5,5) "b-"
 ```
 
-그래프 저장
+## Add Sequence Plot
 
-```text
-plot "save" "graph.png"
+```msfm
+plot "add" a [1,5] "ro"
 ```
 
-그래프 표시
+## Show Graph
 
-```text
+```msfm
 plot "show"
 ```
 
-그래프 초기화
+## Manage Graph
 
-```text
+```msfm
+plot "remove"
+
 plot "clear"
 ```
 
 ---
 
-# Basic Syntax
+# Example
 
-출력
+## Taylor Approximation of sin(x)
 
-```text
-out "Hello, World!"
+```msfm
+out "Taylor Approximation"
+
+f(x) := sin(x)
+
+approx(x) := x - x^3/6 + x^5/120
+
+error(x) := abs(f(x)-approx(x))
+
+plot "add" f (-PI,PI) "b-"
+plot "add" approx (-PI,PI) "r-"
+
+plot "show"
 ```
 
-입력
+This example uses:
 
-```text
-get n
+- Function definition
+- Mathematical functions
+- Polynomial approximation
+- Absolute error
+- Visualization
+
+---
+
+# Implementation
+
+MSFM interpreter is implemented in Python.
+
+Architecture:
+
 ```
-
-조건문
-
-```text
-if (n > 0) {
-    out "positive"
-}
-elif (n = 0) {
-    out "zero"
-}
-else {
-    out "negative"
-}
-```
-
-반복문
-
-```text
-for (i := 1, 10) {
-    out i
-}
+Source Code
+     |
+     v
+Lexer
+     |
+     v
+Parser
+     |
+     v
+AST
+     |
+     v
+Interpreter
 ```
 
 ---
 
-# Operators
+# Future Plans
 
-| Category   | Operators         |
-| ---------- | ----------------- |
-| Arithmetic | `+ - * / ^ %`     |
-| Comparison | `== != < <= > >=` |
-| Logical    | `and or not`      |
-| Set        | `and or - ~ in`   |
-| Definition | `:=`              |
+- More mathematical operators
+- Calculus support
+  - Limits
+  - Differentiation
+  - Integration
+- Improved mathematical notation
+- Better error messages
+- Extended visualization
 
 ---
 
-# Design Philosophy
+# Why MSFM?
 
-MSfM은 수학을 표현하기 위한 DSL입니다.
-언어의 핵심 목표는 다음과 같습니다.
+Most programming languages are designed for computation.
 
-* 수학 교과서와 유사한 문법
-* 기호 계산 중심의 연산
-* 부동소수점 오차 최소화
-* 교육 환경에서 직관적인 사용성
-* 함수·수열·집합·명제의 자연스러운 표현
+MSFM is designed for mathematical thinking.
 
+The goal is to make mathematical concepts executable
+and allow users to explore equations, functions, and mathematical models through code.
+
+---
+
+## License
+
+MIT License

@@ -24,6 +24,8 @@ class TokenType(Enum):
     TAN = auto()
     SQRT = auto()
     
+    ABS = auto()
+    
     # 비교 연산자
     EQ = auto()        # ==
     NEQ = auto()       # !=
@@ -245,6 +247,8 @@ class Tokenizer:
             return Token(TokenType.LOG, 'log')
         elif value == 'len':
             return Token(TokenType.LEN, 'len')
+        elif value == 'abs':
+            return Token(TokenType.ABS, 'abs')
             
         return Token(TokenType.ID, value)
 

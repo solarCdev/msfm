@@ -14,20 +14,20 @@ def run_file(file_path):
         print(f"❌ [msfm Error] Failed to read file: {e}")
         return
 
-    try:
-        code += '\n'
-        tokenizer = Tokenizer(code)
-        tokens = tokenizer.tokenize()
+    # try:
+    code += '\n'
+    tokenizer = Tokenizer(code)
+    tokens = tokenizer.tokenize()
+    
+    parser = Parser(tokens)
+    ast = parser.parse_program()
+    
+    interpreter = Interpreter()
+    interpreter.interpret(ast)
         
-        parser = Parser(tokens)
-        ast = parser.parse_program()
-        
-        interpreter = Interpreter()
-        interpreter.interpret(ast)
-        
-    except Exception as e:
-        # 💡 에러 메시지에도 msfm 브랜딩을 적용합니다.
-        print(f"\n❌ [msfm Runtime/Algebra Error]:\n{e}")
+    # except Exception as e:
+    #     # 💡 에러 메시지에도 msfm 브랜딩을 적용합니다.
+    #     print(f"\n❌ [msfm Runtime/Algebra Error]:\n{e}")
 
 def main():
     if len(sys.argv) > 1:

@@ -1,8 +1,6 @@
-a := {1, 2, 3, 4, 5}
-b := {1, 3, 5, 7, 9}
-
+a := 0
+get a
 out a
-out b
-out a & b
-out a | b
-out not a
+
+f(x) := a * x^2
+out f(2)

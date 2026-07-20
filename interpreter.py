@@ -146,6 +146,7 @@ class Interpreter:
         elif op_type == TokenType.SIN:   return TrigonometricNumber("SIN", 1.0, expr_val)
         elif op_type == TokenType.COS:   return TrigonometricNumber("COS", 1.0, expr_val)
         elif op_type == TokenType.TAN:   return TrigonometricNumber("TAN", 1.0, expr_val)
+        elif op_type == TokenType.ABS:   return abs(expr_val)
 
         raise RuntimeError(f"지원하지 않는 단항 연산자: {node.op_token.value}")
 
@@ -240,7 +241,8 @@ class Interpreter:
             data = node.data
             return IntensionalSet(
                 var_name=data['var_name'],
-                condition_node=data['condition']
+                condition_node=data['condition'],
+                interpreter=self
             )
 
         # 2. 원소 나열식 외연적 집합 (ELEMENTS) -> {1, 2, 3}
@@ -292,7 +294,8 @@ class Interpreter:
             name=node.name,
             param_name=node.param_name,
             domain_set_node=node.domain,
-            body=node.body
+            body=node.body,
+            interpreter=self
         )
         return self.current_env.define(node.name, func_obj)
 
@@ -307,7 +310,7 @@ class Interpreter:
                 if not (arg_val in domain_set):
                     raise ValueError(f"대수 에러: 입력값 {arg_val}이 정의역을 벗어났습니다.")
 
-            isolated_env = Environment(parent=None)
+            isolated_env = Environment(parent=target.defining_env)
             isolated_env.define(target.param_name, arg_val)
 
             old_env = self.current_env

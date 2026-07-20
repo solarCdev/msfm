@@ -280,16 +280,18 @@ def empty() -> RangeSet:
 
 
 class IntensionalSet:
-    def __init__(self, var_name: str, condition_node):
+    def __init__(self, var_name: str, condition_node, interpreter):
         self.var_name = var_name            
         self.condition_node = condition_node
+        from copy import deepcopy
+        self.defining_env = deepcopy(interpreter.current_env)
 
     def contains(self, interpreter, value: 'RealNumber') -> bool:
         if not isinstance(value, RealNumber):
             raise TypeError(f"타입 에러: 집합 검사는 오직 숫자(RealNumber)만 가능합니다. (받은 타입: {type(value).__name__})")
 
         from interpreter import Environment
-        isolated_env = Environment(parent=None) 
+        isolated_env = Environment(parent=self.defining_env) 
         isolated_env.define(self.var_name, value)
 
         old_env = interpreter.current_env

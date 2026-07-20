@@ -409,6 +409,9 @@ class Parser:
         elif token.type == TokenType.SQRT:
             self.advance()
             return UnaryOpNode(op_token=token, expr=self.parse_power())
+        elif token.type == TokenType.ABS:
+            self.advance()
+            return UnaryOpNode(op_token=token, expr=self.parse_power())
         
         return self.parse_power()
     
