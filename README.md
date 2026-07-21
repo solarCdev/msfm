@@ -1,12 +1,12 @@
 # MSFM
-## Mathematical Scientific Formula Language
+## Minimal Script for Math
 
-> A mathematical programming language designed for expressing mathematical ideas naturally.
+> A minimal scripting language designed for expressing mathematical ideas naturally.
 
-MSFM은 수학적 표현과 탐구를 위해 설계된 프로그래밍 언어입니다.
+MSFM(Minimal Script for Math)은 수학적 표현과 탐구를 위해 설계된 프로그래밍 언어입니다.
 
-일반적인 프로그래밍 언어처럼 소프트웨어 개발을 주된 목표로 하지 않고,
-함수, 수열, 집합, 그래프와 같은 수학적 객체를 코드로 표현하는 것을 목표로 합니다.
+일반적인 소프트웨어 개발보다 함수, 수열, 집합, 그래프 등
+수학적 객체를 코드로 표현하고 탐구하는 것을 목표로 합니다.
 
 ---
 
@@ -98,7 +98,7 @@ A := {1,2,3}
 
 | Operator | Meaning |
 |---|---|
-| `|` | Union |
+| `\|` | Union |
 | `&` | Intersection |
 | `-` | Difference |
 | `not` | Complement |
